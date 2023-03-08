@@ -11,7 +11,7 @@ def get_armed_conflicts():
     #table_numbers = ['10000','1000', '100']
     
     # First 4 tables contain the data 
-    tables =soup.find_all('table')[:3]
+    tables =soup.find_all('table')[:4]
 
     conflicts = []
     
@@ -33,11 +33,12 @@ def get_armed_conflicts():
             country = row[3].find('a').text
             
             # Get cumulative fatalities
-            cum_fat = row[4].find('span').text + row[4].text
+            cum_fat = row[4].find('span').text + ' ' + row[4].text
             
+            # Build dictionary
             conflicts.append({'name': name, 'country': country, 'cum_fat': cum_fat})
         
-    print(conflicts)
+    return conflicts
     
     
 if __name__ == "__main__":
