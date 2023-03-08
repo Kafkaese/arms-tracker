@@ -23,7 +23,15 @@ def get_armed_conflicts():
         conflict_rows = table.find('tbody').find_all('tr')
         for conflict in conflict_rows[1:]:
 
-            conflicts.append({'name': conflict.find_all('td')[1].find('a').text})
+            # Get row
+            row = conflict.find_all('td')
+            
+            # Get conflict name
+            name = row[1].find('a').text
+            
+            country = row[3].find('a').text
+            
+            conflicts.append({'name': name, 'country': country})
         
     print(conflicts)
     
