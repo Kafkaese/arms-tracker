@@ -29,9 +29,13 @@ def get_armed_conflicts():
             # Get conflict name
             name = row[1].find('a').text
             
+            # Get country name
             country = row[3].find('a').text
             
-            conflicts.append({'name': name, 'country': country})
+            # Get cumulative fatalities
+            cum_fat = row[4].find('span').text + row[4].text
+            
+            conflicts.append({'name': name, 'country': country, 'cum_fat': cum_fat})
         
     print(conflicts)
     
