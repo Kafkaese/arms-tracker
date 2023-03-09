@@ -14,30 +14,38 @@ def create_connection():
         if conn:
             conn.close()
             
-def write_dicst_db(table_name: str, data: dict, verbose = False):
-    
-    
+def create_write_dict_db(table_name: str, data: dict, verbose = False):
+    """
+    Writes the contents of a dictionary into a table in the database
+    ! DESTRUCTIVE: overwrites pre-existing table of same name
+    """
+    sqliteConnection = None
     try:
     
         # Connect to databse
-        sqliteConnection = sqlite3.connect(database=os.getenv["DB_PATH"])
+        sqliteConnection = sqlite3.connect(database=os.getenv("DB_PATH"))
         cursor = sqliteConnection.cursor()
+
+        # Drop old table of same name
+        cursor.execute("drop table ?", table_name)
     
+        # create field names for table from dictionary keys
+        #data_types = {'int': 'INTEGER', 'float': 'REAL', 'str': 'TEXT'}
+        #field_names =','.join([f'{key} {data_types[type(value)]}' for key, value in data.items()])
+        
         # Create country table 
-        cursor.execute('drop table %(table_name)s', {"table_name": table_name})
-        cursor.execute('create table %(table_name)s(country TEXT, party TEXT, url TEXT, position TEXT);', {"table_name": table_name}) 
+        #cursor.execute('create table %(table_name)s (%(field_names)s);', {"table_name": table_name, "field_names": field_names}) 
     
         # Insert data into table
-        cursor.executemany(
-            "insert into country (country, party, url, position) VALUES (?, ?, ?, ?);", country_info)
+        #cursor.executemany("insert into country (country, party, url, position) VALUES (?, ?, ?, ?);", country_info)
     
         # Show student table
-        if verbose:
-            cursor.execute('select * from country;')
+        #if verbose:
+        #    cursor.execute('select * from country;')
     
         # View result
-        result = cursor.fetchall()
-        print(result)
+        #result = cursor.fetchall()
+        #print(result)
     
         # Commit work and close connection
         sqliteConnection.commit()
@@ -79,3 +87,6 @@ def insert_country(db_path, country):
             print('SQLite Connection closed')
     
     return cur.lastrowid
+
+if __name__ == '__main__':
+    create_write_dict_db('test', {'Field1': 'bla', 'Field2': 2, 'Field3': 3.141})
