@@ -1,3 +1,8 @@
 .python-version
+
+# Direnv
 .env
 .envrc
+
+# Data
+data
