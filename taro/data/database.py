@@ -1,11 +1,12 @@
 import sqlite3
 from sqlite3 import Error
+import os
 
-def create_connection(db_file):
+def create_connection():
     """ create a database connection to a SQLite database """
     conn = None
     try:
-        conn = sqlite3.connect(db_file)
+        conn = sqlite3.connect(database=os.getenv["DB_PATH"])
         print(sqlite3.version)
     except Error as e:
         print(e)
@@ -13,20 +14,13 @@ def create_connection(db_file):
         if conn:
             conn.close()
             
-def write_dicst_db(db_path, csv_path, verbose = False):
+def write_dicst_db(table_name: str, data: dict, verbose = False):
     
     
     try:
- 
-        # Import csv and extract data
-        with open(csv_path, 'r') as fin:
-            dr = csv.DictReader(fin)
-            country_info = [(i['country name'], i['ruling party'], i['url'], i['position']) for i in dr]
-            #print(country_info)
     
-        # Connect to SQLite
-        #sqliteConnection = sqlite3.connect(f"{os.path.dirname(__file__)}/../data/databases/wiki.db")
-        sqliteConnection = sqlite3.connect(database=db_path)
+        # Connect to databse
+        sqliteConnection = sqlite3.connect(database=os.getenv["DB_PATH"])
         cursor = sqliteConnection.cursor()
     
         # Create country table 
