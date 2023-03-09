@@ -24,8 +24,8 @@ def write_dicst_db(table_name: str, data: dict, verbose = False):
         cursor = sqliteConnection.cursor()
     
         # Create country table 
-        cursor.execute('drop table country')
-        cursor.execute('create table country(country TEXT, party TEXT, url TEXT, position TEXT);') 
+        cursor.execute('drop table %(table_name)s', {"table_name": table_name})
+        cursor.execute('create table %(table_name)s(country TEXT, party TEXT, url TEXT, position TEXT);', {"table_name": table_name}) 
     
         # Insert data into table
         cursor.executemany(
