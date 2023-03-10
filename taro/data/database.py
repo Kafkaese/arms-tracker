@@ -14,7 +14,7 @@ def create_connection():
         if conn:
             conn.close()
             
-def create_write_dict_db(table_name: str, data: dict, verbose = False):
+def create_write_dict_db(table_name: str, data: list, verbose = False):
     """
     Writes the contents of a dictionary into a table in the database
     ! DESTRUCTIVE: overwrites pre-existing table of same name
@@ -32,17 +32,25 @@ def create_write_dict_db(table_name: str, data: dict, verbose = False):
         # create field names for table from dictionary keys
         data_types = {'int': 'INTEGER', 'float': 'REAL', 'str': 'TEXT'}
         
-        field_names = [f'{key} {data_types[type(value).__name__]}' for key, value in data.items()]
+        field_names = [f'{key} {data_types[type(value).__name__]}' for key, value in data[0].items()]
         field_names = ', '.join(field_names)
         
         # Create country table 
         cursor.execute(f'create table {table_name} ({field_names});') 
         
-        # Insert data into table
+        ## Insert data into table
+        # Pepare keys
         keys = ', '.join(data.keys())
+        
+        
         values = tuple([str(value) for value in data.values()])
+        
+        
         print(len(values))
+        
         print(f"insert into {table_name} ({keys}) VALUES ({('?, '*len(values)).strip(', ')});")
+        
+        # insert
         cursor.executemany(f"insert into {table_name} ({keys}) VALUES ({('?, '*len(values)).strip(', ')});", [values])
     
         # Show student table
