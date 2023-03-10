@@ -31,9 +31,11 @@ def create_write_dict_db(table_name: str, data: dict, verbose = False):
     
         # create field names for table from dictionary keys
         data_types = {'int': 'INTEGER', 'float': 'REAL', 'str': 'TEXT'}
-        field_names =','.join([f'{key} {data_types[type(value)]}' for key, value in data.items()])
         
-        print(f'create table {table_name} ({field_names});')
+        field_names = [f'{key} {data_types[type(value).__name__]}' for key, value in data.items()]
+        field_names = ', '.join(field_names)
+        
+        #print(f'create table {table_name} ({field_names});')
         # Create country table 
         cursor.execute(f'create table {table_name} ({field_names});') 
     
