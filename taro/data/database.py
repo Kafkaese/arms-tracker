@@ -28,6 +28,9 @@ def create_write_dict_db(table_name: str, data: dict, verbose = False):
 
         # Drop old table of same name
         cursor.execute(f"drop table if exists {table_name}")
+        
+        # Create country table 
+        cursor.execute(f'create table {table_name} ({field_names});') 
     
         # create field names for table from dictionary keys
         data_types = {'int': 'INTEGER', 'float': 'REAL', 'str': 'TEXT'}
@@ -35,9 +38,7 @@ def create_write_dict_db(table_name: str, data: dict, verbose = False):
         field_names = [f'{key} {data_types[type(value).__name__]}' for key, value in data.items()]
         field_names = ', '.join(field_names)
         
-        #print(f'create table {table_name} ({field_names});')
-        # Create country table 
-        cursor.execute(f'create table {table_name} ({field_names});') 
+        
     
         # Insert data into table
         #cursor.executemany("insert into country (country, party, url, position) VALUES (?, ?, ?, ?);", country_info)
