@@ -27,14 +27,15 @@ def create_write_dict_db(table_name: str, data: dict, verbose = False):
         cursor = sqliteConnection.cursor()
 
         # Drop old table of same name
-        cursor.execute("drop table ?", table_name)
+        cursor.execute(f"drop table if exists {table_name}")
     
         # create field names for table from dictionary keys
-        #data_types = {'int': 'INTEGER', 'float': 'REAL', 'str': 'TEXT'}
-        #field_names =','.join([f'{key} {data_types[type(value)]}' for key, value in data.items()])
+        data_types = {'int': 'INTEGER', 'float': 'REAL', 'str': 'TEXT'}
+        field_names =','.join([f'{key} {data_types[type(value)]}' for key, value in data.items()])
         
+        print(f'create table {table_name} ({field_names});')
         # Create country table 
-        #cursor.execute('create table %(table_name)s (%(field_names)s);', {"table_name": table_name, "field_names": field_names}) 
+        cursor.execute(f'create table {table_name} ({field_names});') 
     
         # Insert data into table
         #cursor.executemany("insert into country (country, party, url, position) VALUES (?, ?, ?, ?);", country_info)
