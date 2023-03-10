@@ -46,12 +46,12 @@ def create_write_dict_db(table_name: str, data: dict, verbose = False):
         cursor.executemany(f"insert into {table_name} ({keys}) VALUES ({('?, '*len(values)).strip(', ')});", [values])
     
         # Show student table
-        #if verbose:
-        #    cursor.execute('select * from country;')
+        if verbose:
+            cursor.execute(f'select * from {table_name};')
     
-        # View result
-        #result = cursor.fetchall()
-        #print(result)
+            # View result
+            result = cursor.fetchall()
+            print(result)
     
         # Commit work and close connection
         sqliteConnection.commit()
@@ -95,4 +95,4 @@ def insert_country(db_path, country):
     return cur.lastrowid
 
 if __name__ == '__main__':
-    create_write_dict_db('test', {'Field1': 'bla', 'Field2': 2, 'Field3': 3.141})
+    create_write_dict_db('test', {'Field1': 'bla', 'Field2': 2, 'Field3': 3.141}, verbose=True)
