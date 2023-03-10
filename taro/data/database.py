@@ -35,23 +35,18 @@ def create_write_dict_db(table_name: str, data: list, verbose = False):
         field_names = [f'{key} {data_types[type(value).__name__]}' for key, value in data[0].items()]
         field_names = ', '.join(field_names)
         
-        # Create country table 
+        # Create table 
         cursor.execute(f'create table {table_name} ({field_names});') 
         
         ## Insert data into table
         # Pepare keys
-        keys = ', '.join(data.keys())
+        keys = ', '.join(data[0].keys())
         
+        # prepare values as list of tuples
+        values = [ tuple([str(value) for value in data_dict.values()]) for data_dict in data ]
         
-        values = tuple([str(value) for value in data.values()])
-        
-        
-        print(len(values))
-        
-        print(f"insert into {table_name} ({keys}) VALUES ({('?, '*len(values)).strip(', ')});")
-        
-        # insert
-        cursor.executemany(f"insert into {table_name} ({keys}) VALUES ({('?, '*len(values)).strip(', ')});", [values])
+        # insert all 
+        cursor.executemany(f"insert into {table_name} ({keys}) VALUES ({('?, '*len(values)).strip(', ')});", values)
     
         # Show student table
         if verbose:
@@ -103,4 +98,5 @@ def insert_country(db_path, country):
     return cur.lastrowid
 
 if __name__ == '__main__':
-    create_write_dict_db('test', {'Field1': 'bla', 'Field2': 2, 'Field3': 3.141}, verbose=True)
+    data = [{'Field1': 'bla', 'Field2': 2, 'Field3': 3.141}, {'Field1': 'blafdf', 'Field2': 42, 'Field3': 3.1431}, {'Field1': 'blfsa', 'Field2': 4, 'Field3': 3.431}]
+    create_write_dict_db('test', data, verbose=True)
