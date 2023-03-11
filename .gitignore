@@ -1,6 +1,7 @@
 .python-version
-
 **/__pycache__
+build/
+*.egg-info/
 
 # Direnv
 .env
