@@ -10,4 +10,5 @@ setup(name='taro',
       author='Frederik Laubisch',
       author_email='kafkaese@gmail.com',
       install_requires=requirements,
-      packages='taro')
+      packages=['taro'],
+      include_package_data=True)
