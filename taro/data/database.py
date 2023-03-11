@@ -26,6 +26,10 @@ def create_write_dict_db(table_name: str, data: list, verbose = False):
         sqliteConnection = sqlite3.connect(database=os.getenv("DB_PATH"))
         cursor = sqliteConnection.cursor()
 
+        # Backup table
+        # NEED TO CHECK IF TABLE EXISTS FIRST
+        cursor.execute(f"CREATE TABLE {table_name}_BACKUP as SELECT * FROM {table_name}")
+        
         # Drop old table of same name
         cursor.execute(f"drop table if exists {table_name}")
     
