@@ -8,7 +8,7 @@ jobs:
     steps:
       - name: Get code
         uses: actions/checkout@v3
-      - name: install pytest
-        run: pip install pytest
+      - name: Install package
+        run: pip install .
       - name: Run tests
         run: pytest taro/tests
