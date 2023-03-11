@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
 import requests as re
 
-def get_armed_conflicts():
+def get_armed_conflicts() -> list:
     res = re.get('https://en.wikipedia.org/wiki/List_of_ongoing_armed_conflicts').content
 
     soup = BeautifulSoup(res, 'html.parser')
