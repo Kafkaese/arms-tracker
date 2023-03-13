@@ -12,5 +12,7 @@ jobs:
         run: pip install --upgrade pip
       - name: Install package
         run: pip install .
+      - name: Create logs
+        run: mkdir logs && touch logs/data_scrapers_get_conflict_belligerents
       - name: Run tests
         run: pytest taro/tests
