@@ -63,17 +63,21 @@ def get_conflict_belligerents(url: str, write_logs=False) -> list:
     if header == None:
         header = soup.find('th', string="Parties to the civil conflict")
     if header == None:
+        
         if write_logs:
             with open(logs_path, 'a') as logs:
                 logs.write(f"!FAILED:{url}:header")
         
-        return []
+        # Caused by internal conflict with no defined parties. Skip, but dont return empty
+        return [{'name': None, 'url': None}]
   
+    # elemens listing all countries etc of a certain side of the conflict
     parties = header.parent.find_next_sibling(header.parent.name).find_all('td')
 
     # Extract countries from parties
     belligerents = []
     for party in parties:
+        
         
         for country in party.find_all('p'):
             try:
