@@ -56,10 +56,12 @@ def get_conflict_belligerents(url: str, write_logs=False) -> list:
     
     ## Get table rows with all belligerents
     
-    # Header text is either Belligerents or Combatants
+    # Header text is either Belligerents or Combatants or Parties to the civil conflict
     header = soup.find('th', string="Belligerents")
     if header == None:
         header = soup.find('th', string="Combatants")
+    if header == None:
+        header = soup.find('th', string="Parties to the civil conflict")
     if header == None:
         if write_logs:
             with open(logs_path, 'a') as logs:
