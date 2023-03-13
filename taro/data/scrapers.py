@@ -78,9 +78,11 @@ def get_conflict_belligerents(url: str, write_logs=False) -> list:
     belligerents = []
     for party in parties:
         
-        
+        # elements that are a major force in the conflict, typically countries
         for country in party.find_all('p'):
+            
             try:
+                # Get name and url of country
                 country_info = country.find('a')
                 belligerents.append({'name': country_info.text, 'url': 'https://en.wikipedia.org/' + country_info['href']})
                 
@@ -88,7 +90,7 @@ def get_conflict_belligerents(url: str, write_logs=False) -> list:
                     with open(logs_path, 'a') as logs:
                         logs.write(f"SUCCESS:{url}:{country_info.text}\n")
             except:
-                
+                # usually the case because the force is not a country and has no url
                 if write_logs:
                     with open(logs_path, 'a') as logs:
                         logs.write(f"!FAILED:{url}:'{country}'")
