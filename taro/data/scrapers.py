@@ -55,10 +55,7 @@ def get_conflict_belligerents(url):
     for party in parties:
         
         for country in party.find_all('p'):
-            belligerents.append(country.find('a').text)
+            country_info = country.find('a')
+            belligerents.append({'name': country_info.text, 'url': 'https://en.wikipedia.org/' + country_info['href']})
             
     return belligerents
-    
-if __name__ == "__main__":
-    #get_armed_conflicts()
-    get_conflict_belligerents
