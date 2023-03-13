@@ -29,7 +29,7 @@ def test_full_call_first_example():
     
 def test_all_conflicts():
     conflicts = get_armed_conflicts()
-    results = [get_conflict_belligerents(conflict['url'], write_logs=True) for conflict in conflicts]
+    results = [get_conflict_belligerents(conflict['url']) for conflict in conflicts]
     
     assert [] not in results
 
