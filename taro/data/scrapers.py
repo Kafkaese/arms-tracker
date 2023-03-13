@@ -29,6 +29,9 @@ def get_armed_conflicts() -> list:
             # Get conflict name
             name = row[1].find('a').text
             
+            # Get conflict url 
+            url = row[1].find('a')['href']
+            
             # Get country name
             country = row[3].find('a').text
             
@@ -36,7 +39,7 @@ def get_armed_conflicts() -> list:
             cum_fat = row[4].find('span').text + ' ' + row[4].text
             
             # Build dictionary
-            conflicts.append({'name': name, 'country': country, 'cum_fat': cum_fat})
+            conflicts.append({'name': name, 'country': country, 'url': url, 'cum_fat': cum_fat})
         
     return conflicts
     
