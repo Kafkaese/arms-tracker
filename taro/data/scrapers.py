@@ -49,8 +49,15 @@ def get_conflict_belligerents(url):
     result = re.get(url)
     soup = BeautifulSoup(result.content, 'html.parser')
     
-    # Get table rows with all belligerents
+    ## Get table rows with all belligerents
+    
+    # Header text is either Belligerents or Combatants
     header = soup.find('th', string="Belligerents")
+    if header == None:
+        header = soup.find('th', string="Combatants")
+
+
+        
     parties = header.parent.find_next_sibling(header.parent.name).find_all('td')
     
     # Extract countries from parties
