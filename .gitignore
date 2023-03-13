@@ -1,7 +1,11 @@
+# Python
 .python-version
 **/__pycache__
 build/
 *.egg-info/
+
+# Jupyter
+**/.ipynb_checkpoints
 
 # Direnv
 .env
