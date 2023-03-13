@@ -40,6 +40,25 @@ def get_armed_conflicts() -> list:
         
     return conflicts
     
+def get_conflict_belligerents(url):
+    
+    # Get soup
+    result = re.get(url)
+    soup = BeautifulSoup(result.content, 'html.parser')
+    
+    # Get table rows with all belligerents
+    header = soup.find('th', string="Belligerents")
+    parties = header.parent.find_next_sibling(header.parent.name).find_all('td')
+    
+    # Extract countries from parties
+    belligerents = []
+    for party in parties:
+        
+        for country in party.find_all('p'):
+            belligerents.append(country.find('a').text)
+            
+    return belligerents
     
 if __name__ == "__main__":
-    get_armed_conflicts()
+    #get_armed_conflicts()
+    get_conflict_belligerents
