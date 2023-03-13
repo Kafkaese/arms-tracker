@@ -28,8 +28,10 @@ def test_full_call_first_example():
     assert bel == expectec_output
     
 def test_all_conflicts():
-    res = get_armed_conflicts()
-    [get_conflict_belligerents(conflict['url']) for conflict in res]
+    conflicts = get_armed_conflicts()
+    results = [get_conflict_belligerents(conflict['url'], write_logs=True) for conflict in conflicts]
+    
+    assert [] not in results
 
 if __name__ == "__main__":
-    test_all_conflicts()
+    print(test_all_conflicts())
