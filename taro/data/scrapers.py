@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 import requests as re
+from os import path
 
 def get_armed_conflicts() -> list:
     res = re.get('https://en.wikipedia.org/wiki/List_of_ongoing_armed_conflicts').content
@@ -43,7 +44,11 @@ def get_armed_conflicts() -> list:
         
     return conflicts
     
-def get_conflict_belligerents(url):
+def get_conflict_belligerents(url: str, write_logs=False) -> list:
+    
+    # Path for logs if enabled
+    if write_logs:
+        logs_path = path.join(path.dirname(__file__),"..", "..", "logs", "data_scrapers_get_conflict_belligerents")
     
     # Get soup
     result = re.get(url)
@@ -55,17 +60,33 @@ def get_conflict_belligerents(url):
     header = soup.find('th', string="Belligerents")
     if header == None:
         header = soup.find('th', string="Combatants")
-
-
+    if header == None:
+        if write_logs:
+            with open(logs_path, 'a') as logs:
+                logs.write(f"!FAILED:{url}:header")
         
+        return []
+  
     parties = header.parent.find_next_sibling(header.parent.name).find_all('td')
-    
+
     # Extract countries from parties
     belligerents = []
     for party in parties:
         
         for country in party.find_all('p'):
-            country_info = country.find('a')
-            belligerents.append({'name': country_info.text, 'url': 'https://en.wikipedia.org/' + country_info['href']})
-            
+            try:
+                country_info = country.find('a')
+                belligerents.append({'name': country_info.text, 'url': 'https://en.wikipedia.org/' + country_info['href']})
+                
+                if write_logs:
+                    with open(logs_path, 'a') as logs:
+                        logs.write(f"SUCCESS:{url}:{country_info.text}\n")
+            except:
+                
+                if write_logs:
+                    with open(logs_path, 'a') as logs:
+                        logs.write(f"!FAILED:{url}:'{country}'")
+                
+    
+
     return belligerents
