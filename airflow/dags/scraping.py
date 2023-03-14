@@ -13,7 +13,7 @@ def _run_scrapers():
     conflicts = scrapers.get_armed_conflicts()
     results = [scrapers.get_conflict_belligerents(conflict['url']) for conflict in conflicts]
 
-with DAG('scrapers', start_date=datetime(2023, 3, 14), schedule='@daily', catchup=False) as dag:
+with DAG('scraping', start_date=datetime(2023, 3, 14), schedule='@daily', catchup=False) as dag:
     
     # Check can reach website
     is_wiki_available = HttpSensor(
