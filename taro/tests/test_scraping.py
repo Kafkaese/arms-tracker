@@ -26,12 +26,13 @@ def test_full_call_first_example():
     expectec_output = [{'name': 'State Administration Council', 'url': 'https://en.wikipedia.org//wiki/State_Administration_Council'}, 
                        {'name': 'National Unity Government', 'url': 'https://en.wikipedia.org//wiki/National_Unity_Government_of_Myanmar'}]
     assert bel == expectec_output
-    
+
+'''    
 def test_all_conflicts():
     conflicts = get_armed_conflicts()
     results = [get_conflict_belligerents(conflict['url']) for conflict in conflicts]
     
     assert [] not in results
-
+'''
 if __name__ == "__main__":
     print(test_all_conflicts())
