@@ -13,11 +13,12 @@ def _run_scrapers():
     conflicts = scrapers.get_armed_conflicts()
     results = [scrapers.get_conflict_belligerents(conflict['url']) for conflict in conflicts]
 
-with DAG('scrapers', start_date=datetime(2023, 3, 14), schedule_interval='@daily', catchup=False) as dag:
+with DAG('scrapers', start_date=datetime(2023, 3, 14), schedule='@daily', catchup=False) as dag:
     
     # Check can reach website
     is_wiki_available = HttpSensor(
         task_id = 'is_wiki_available',
+        endpoint="",
         http_conn_id = 'https://en.wikipedia.org/wiki/List_of_ongoing_armed_conflicts' 
     )
     
