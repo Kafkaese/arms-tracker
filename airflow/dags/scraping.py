@@ -30,4 +30,4 @@ with DAG('scrapers', start_date=datetime(2023, 3, 14), schedule_interval='@daily
     
     # Write data to sqlite
     
-    
+is_wiki_available >> run_scrapers 
