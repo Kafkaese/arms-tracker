@@ -9,6 +9,10 @@ from taro.data import scrapers, database
 # Utils
 from datetime import datetime
 
+def _run_scrapers():
+    conflicts = scrapers.get_armed_conflicts()
+    results = [scrapers.get_conflict_belligerents(conflict['url']) for conflict in conflicts]
+
 with DAG('scrapers', start_date=datetime(2023, 3, 14), schedule_interval='@daily', catchup=False) as dag:
     
     # Check can reach website
@@ -18,6 +22,11 @@ with DAG('scrapers', start_date=datetime(2023, 3, 14), schedule_interval='@daily
     )
     
     # Run scrapers 
+    
+    run_scrapers = PythonOperator(
+        task_id = 'run_scrapers',
+        python_callable=_run_scrapers
+    )
     
     # Write data to sqlite
     
