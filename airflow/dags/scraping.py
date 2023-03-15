@@ -50,4 +50,4 @@ with DAG('scraping', start_date=datetime(2023, 3, 14), schedule='@daily', catchu
         python_callable = _save_data
     )
     
-is_wiki_available >> run_scrapers >> save_data
+is_wiki_available >> get_conflicts >>  get_belligerents >> save_data
