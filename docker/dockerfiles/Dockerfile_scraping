@@ -12,3 +12,5 @@ RUN pip install .
 
 # Volume for logs?
 
+# For now just run all the tests
+CMD pytest taro/tests -v
