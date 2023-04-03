@@ -1,4 +1,7 @@
 FROM python:3.8.16-slim-buster
 
+# Copy package files
 COPY ../taro taro
+COPY ../setup.py setup.py
+COPY ../requirements_scraper.txt requirements.txt
 
