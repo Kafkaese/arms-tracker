@@ -5,3 +5,5 @@ COPY ../taro taro
 COPY ../setup.py setup.py
 COPY ../requirements_scraper.txt requirements.txt
 
+# Install taro package
+RUN pip install .
