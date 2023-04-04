@@ -1,7 +1,11 @@
 name: Run Tests
+
 on: 
   pull_request:
     types: [opened, reopened, synchronize]
+
+env:
+  DB_PATH='./database'
 jobs:
   tests:
     runs-on: ubuntu-latest
