@@ -29,5 +29,21 @@ def test_dummy_table():
             sqliteConnection.close()
             print('SQLite Connection closed')
     
-#def test_dummy_backup():
+def test_dummy_backup():
+    sqliteConnection = None
+    try:
     
+        # Connect to databse
+        sqliteConnection = sqlite3.connect(database=os.getenv("DB_PATH"))
+        cursor = sqliteConnection.cursor()
+    
+        # fetch dummy table
+        cursor.execute(f'select * from dummy_BACKUP;')
+        result = cursor.fetchall()
+        
+        assert result == [('bla', 2, 3.141), ('blafdf', 42, 3.1431), ('blfsa', 4, 3.431)]
+        
+    finally:
+        if sqliteConnection:
+            sqliteConnection.close()
+            print('SQLite Connection closed')
