@@ -30,6 +30,12 @@ def test_dummy_table():
             print('SQLite Connection closed')
     
 def test_dummy_backup():
+    # create dummy data
+    new_data = [{'Field1': 'blub', 'Field2': 3, 'Field3': 3.1421}, {'Field1': 'blafdf', 'Field2': 42, 'Field3': 3.1431}, {'Field1': 'blfsa', 'Field2': 4, 'Field3': 3.431}]
+    
+    # Write dummy data to db
+    create_write_dict_db('dummy', new_data, verbose=True)
+    
     sqliteConnection = None
     try:
     
