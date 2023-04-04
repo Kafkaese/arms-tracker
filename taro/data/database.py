@@ -60,9 +60,10 @@ def create_write_dict_db(table_name: str, data: list, verbose = False):
             
             # prepare values as list of tuples
             values = [ tuple([str(value) for value in data_dict.values()]) for data_dict in data ]
-            
+            for value in values:
+                print(value)
             # insert all 
-            cursor.executemany(f"insert into {table_name} ({keys}) VALUES ({('?, '*len(values)).strip(', ')});", values)
+            cursor.executemany(f"insert into {table_name} ({keys}) VALUES ({('?, '*len(data[0].keys())).strip(', ')});", values)
         
             # Show student table
             if verbose:
@@ -135,5 +136,5 @@ def insert_country(db_path, country):
     return cur.lastrowid
 
 if __name__ == '__main__':
-    data = [{'Field1': 'bla', 'Field2': 2, 'Field3': 3.141}, {'Field1': 'blafdf', 'Field2': 42, 'Field3': 3.1431}, {'Field1': 'blfsa', 'Field2': 4, 'Field3': 3.431}]
+    data = [{'Field1': 'bla', 'Field2': 2, 'Field3': 3.141}, {'Field1': 'bla', 'Field2': 2, 'Field3': 3.141}, {'Field1': 'blafdf', 'Field2': 42, 'Field3': 3.1431}, {'Field1': 'blfsa', 'Field2': 4, 'Field3': 3.431}]
     create_write_dict_db('test', data, verbose=True)
