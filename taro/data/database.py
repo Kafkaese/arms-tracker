@@ -81,7 +81,7 @@ def create_write_dict_db(table_name: str, data: list, verbose = False):
                 print(result)
         
             # Commit work and close connection
-            sqliteConnection.commit()
+            connection.commit()
             cursor.close()
         
         # If error occurs during writing into table, restore with backup if exists
