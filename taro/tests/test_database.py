@@ -7,7 +7,11 @@ def test_clean_db():
     try:
     
         # Connect to databse
-        connection = psycopg2.connect(database=os.getenv("DB_PATH"))
+        connection = psycopg2.connect(dbname=os.getenv("POSTGRES_DB_NAME"),
+                                user=os.getenv("POSTGRES_USER"),
+                                password=os.getenv("POSTGRES_PASSWORD"),
+                                host=os.getenv("POSTGRES_HOST"),
+                                port=os.getenv("POSTGRES_PORT"))
         cursor = connection.cursor()
     
         # fetch dummy table
@@ -38,7 +42,11 @@ def test_dummy_table():
     try:
     
         # Connect to databse
-        connection = psycopg2.connect(database=os.getenv("DB_PATH"))
+        connection = psycopg2.connect(dbname=os.getenv("POSTGRES_DB_NAME"),
+                                user=os.getenv("POSTGRES_USER"),
+                                password=os.getenv("POSTGRES_PASSWORD"),
+                                host=os.getenv("POSTGRES_HOST"),
+                                port=os.getenv("POSTGRES_PORT"))
         cursor = connection.cursor()
     
         # fetch dummy table
@@ -63,7 +71,11 @@ def test_dummy_backup():
     try:
     
         # Connect to databse
-        connection = psycopg2.connect(database=os.getenv("DB_PATH"))
+        connection = psycopg2.connect(dbname=os.getenv("POSTGRES_DB_NAME"),
+                                user=os.getenv("POSTGRES_USER"),
+                                password=os.getenv("POSTGRES_PASSWORD"),
+                                host=os.getenv("POSTGRES_HOST"),
+                                port=os.getenv("POSTGRES_PORT"))
         cursor = connection.cursor()
     
         # fetch dummy table
@@ -89,7 +101,11 @@ def test_dummy_backup_restore():
     try:
 
         # Connect to databse
-        connection = psycopg2.connect(database=os.getenv("DB_PATH"))
+        connection = psycopg2.connect(dbname=os.getenv("POSTGRES_DB_NAME"),
+                                user=os.getenv("POSTGRES_USER"),
+                                password=os.getenv("POSTGRES_PASSWORD"),
+                                host=os.getenv("POSTGRES_HOST"),
+                                port=os.getenv("POSTGRES_PORT"))
         cursor = connection.cursor()
     
         # fetch dummy table
