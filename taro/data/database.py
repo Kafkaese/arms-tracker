@@ -40,8 +40,7 @@ def create_write_dict_db(table_name: str, data: list, verbose = False):
         # Check if table exists
         try:
             listOfTables = cursor.execute(
-                f"""SELECT tbl_Name FROM sqlite_master WHERE type='table'
-                AND tbl_Name='{table_name}'; """).fetchall()
+                f"""SELECT tablename FROM pg_tables WHERE tablename='{table_name}'; """).fetchall()
             
             # if exists, create backup copy        
             if listOfTables != []:
@@ -89,8 +88,7 @@ def create_write_dict_db(table_name: str, data: list, verbose = False):
         except psycopg2.Error as error:
             print(f'ERROR: {error}')
             listOfTables = cursor.execute(
-                f"""SELECT tbl_Name FROM sqlite_master WHERE type='table'
-                AND tbl_Name='{table_name}_BACKUP'; """).fetchall()
+                f"""SELECT tablename FROM pg_tables WHERE tablename='{table_name}'; """).fetchall()
             
             try:
                 cursor.execute(f"DROP TABLE {table_name};")
