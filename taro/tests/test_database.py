@@ -27,7 +27,7 @@ def test_clean_db():
     finally:
         if connection:
             connection.close()
-            print('SQLite Connection closed')
+            print('Postgres Connection closed: test_clean_db')
 
 def test_dummy_table():
     
@@ -58,7 +58,7 @@ def test_dummy_table():
     finally:
         if connection:
             connection.close()
-            print('SQLite Connection closed')
+            print('Postgres Connection closed: test_dummy_table')
     
 def test_dummy_backup():
     # create dummy data
@@ -87,7 +87,7 @@ def test_dummy_backup():
     finally:
         if connection:
             connection.close()
-            print('SQLite Connection closed')
+            print('Postgres Connection closed: test_dummy_backup')
             
                 
 def test_dummy_backup_restore():
@@ -117,6 +117,6 @@ def test_dummy_backup_restore():
     finally:
         if connection:
             connection.close()
-            print('SQLite Connection closed')
+            print('Postgres Connection closed: test_dummy_backup_resore')
             
     
