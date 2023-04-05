@@ -27,8 +27,8 @@ def create_write_dict_db(table_name: str, data: list, verbose = False):
     try:
     
         # Connect to databse
-        sqliteConnection = sqlite3.connect(database=os.getenv("DB_PATH"))
-        cursor = sqliteConnection.cursor()
+        connection = psycopg2.connect(database=os.getenv("DB_PATH"))
+        cursor = connection.cursor()
 
 
         ## If table already exists, back it up
@@ -82,7 +82,7 @@ def create_write_dict_db(table_name: str, data: list, verbose = False):
             cursor.close()
         
         # If error occurs during writing into table, restore with backup if exists
-        except sqlite3.Error as error:
+        except psycopg2.Error as error:
             print(f'ERROR: {error}')
             listOfTables = cursor.execute(
                 f"""SELECT tbl_Name FROM sqlite_master WHERE type='table'
@@ -102,13 +102,13 @@ def create_write_dict_db(table_name: str, data: list, verbose = False):
                 
             
     
-    except sqlite3.Error as error:
+    except psycopg2.Error as error:
         print('Error occurred - ', error)
     
     finally:
-        if sqliteConnection:
-            sqliteConnection.close()
-            print('SQLite Connection closed')
+        if connection:
+            connection.close()
+            print('Postgres Connection closed')
 
 def insert_country(db_path, country):
     """
