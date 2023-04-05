@@ -70,7 +70,7 @@ def create_write_dict_db(table_name: str, data: list, verbose = False):
             for value in values:
                 print(value)
             # insert all 
-            cursor.executemany(f"insert into {table_name} ({keys}) VALUES ({('?, '*len(data[0].keys())).strip(', ')});", values)
+            cursor.executemany(f"insert into {table_name} ({keys}) VALUES ({('%s, '*len(data[0].keys())).strip(', ')});", values)
         
             # Show student table
             if verbose:
