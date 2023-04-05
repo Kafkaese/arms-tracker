@@ -1,13 +1,17 @@
-import sqlite3
-from sqlite3 import Error
+import psycopg2
 import os
+from psycopg2 import Error
 
 def create_connection():
     """ create a database connection to a SQLite database """
     conn = None
     try:
-        conn = sqlite3.connect(database=os.getenv["DB_PATH"])
-        print(sqlite3.version)
+        conn = psycopg2.connect(dbname=os.getenv("POSTGRES_DB_NAME"),
+                                user=os.getenv("POSTGRES_USER"),
+                                password=os.getenv("POSTGRES_PASSWORD"),
+                                host=os.getenv("POSTGRES_HOST"),
+                                port=os.getenv("POSTGRES_PORT"))
+        print(psycopg2.__version__)
     except Error as e:
         print(e)
     finally:
