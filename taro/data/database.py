@@ -39,8 +39,11 @@ def create_write_dict_db(table_name: str, data: list, verbose = False):
         
         # Check if table exists
         try:
-            listOfTables = cursor.execute(
-                f"""SELECT tablename FROM pg_tables WHERE tablename='{table_name}'; """).fetchall()
+            
+            cursor.execute(
+                f"""SELECT tablename FROM pg_tables WHERE tablename='{table_name}'; """)
+            listOfTables = cursor.fetchall()
+
             
             # if exists, create backup copy        
             if listOfTables != []:
@@ -48,8 +51,9 @@ def create_write_dict_db(table_name: str, data: list, verbose = False):
             
             # Drop old table of same name
             cursor.execute(f"drop table if exists {table_name}")
-        except:
-            pass
+            
+        except psycopg2.Error as error:
+            print('Error occurred - ', error)
         
         try:   
             # create field names for table from dictionary keys
