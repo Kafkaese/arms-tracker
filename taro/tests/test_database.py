@@ -1,14 +1,14 @@
 from taro.data.database import create_write_dict_db
-import sqlite3
+import psycopg2
 import os
 
 def test_clean_db():
-    sqliteConnection = None
+    connection = None
     try:
     
         # Connect to databse
-        sqliteConnection = sqlite3.connect(database=os.getenv("DB_PATH"))
-        cursor = sqliteConnection.cursor()
+        connection = psycopg2.connect(database=os.getenv("DB_PATH"))
+        cursor = connection.cursor()
     
         # fetch dummy table
         try:
@@ -21,8 +21,8 @@ def test_clean_db():
             pass
         
     finally:
-        if sqliteConnection:
-            sqliteConnection.close()
+        if connection:
+            connection.close()
             print('SQLite Connection closed')
 
 def test_dummy_table():
@@ -34,12 +34,12 @@ def test_dummy_table():
     create_write_dict_db('dummy', data, verbose=True)
     
     
-    sqliteConnection = None
+    connection = None
     try:
     
         # Connect to databse
-        sqliteConnection = sqlite3.connect(database=os.getenv("DB_PATH"))
-        cursor = sqliteConnection.cursor()
+        connection = psycopg2.connect(database=os.getenv("DB_PATH"))
+        cursor = connection.cursor()
     
         # fetch dummy table
         cursor.execute(f'select * from dummy;')
@@ -48,8 +48,8 @@ def test_dummy_table():
         assert result == [('bla', 2, 3.141), ('blafdf', 42, 3.1431), ('blfsa', 4, 3.431)]
         
     finally:
-        if sqliteConnection:
-            sqliteConnection.close()
+        if connection:
+            connection.close()
             print('SQLite Connection closed')
     
 def test_dummy_backup():
@@ -59,12 +59,12 @@ def test_dummy_backup():
     # Write dummy data to db
     create_write_dict_db('dummy', new_data, verbose=True)
     
-    sqliteConnection = None
+    connection = None
     try:
     
         # Connect to databse
-        sqliteConnection = sqlite3.connect(database=os.getenv("DB_PATH"))
-        cursor = sqliteConnection.cursor()
+        connection = psycopg2.connect(database=os.getenv("DB_PATH"))
+        cursor = connection.cursor()
     
         # fetch dummy table
         cursor.execute(f'select * from dummy_BACKUP;')
@@ -73,8 +73,8 @@ def test_dummy_backup():
         assert result == [('bla', 2, 3.141), ('blafdf', 42, 3.1431), ('blfsa', 4, 3.431)]
         
     finally:
-        if sqliteConnection:
-            sqliteConnection.close()
+        if connection:
+            connection.close()
             print('SQLite Connection closed')
             
                 
@@ -89,8 +89,8 @@ def test_dummy_backup_restore():
     try:
 
         # Connect to databse
-        sqliteConnection = sqlite3.connect(database=os.getenv("DB_PATH"))
-        cursor = sqliteConnection.cursor()
+        connection = psycopg2.connect(database=os.getenv("DB_PATH"))
+        cursor = connection.cursor()
     
         # fetch dummy table
         cursor.execute(f'select * from dummy;')
@@ -99,8 +99,8 @@ def test_dummy_backup_restore():
         assert result == [('bla', 2, 3.141), ('blafdf', 42, 3.1431), ('blfsa', 4, 3.431)]
         
     finally:
-        if sqliteConnection:
-            sqliteConnection.close()
+        if connection:
+            connection.close()
             print('SQLite Connection closed')
             
     
