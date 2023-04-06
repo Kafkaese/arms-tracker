@@ -47,8 +47,8 @@ def create_write_dict_db(table_name: str, data: list, verbose = False):
             
             # if exists, create backup copy        
             if listOfTables != []:
-                cursor.execute(f"drop table if exists {table_name}_BACKUP")
-                cursor.execute(f"CREATE TABLE {table_name}_BACKUP as SELECT * FROM {table_name}")
+                cursor.execute(f"drop table if exists {table_name}_backup")
+                cursor.execute(f"CREATE TABLE {table_name}_backup as SELECT * FROM {table_name}")
             
             # Drop old table of same name
             cursor.execute(f"drop table if exists {table_name}")
@@ -72,12 +72,15 @@ def create_write_dict_db(table_name: str, data: list, verbose = False):
             
             # prepare values as list of tuples
             values = [ tuple([str(value) for value in data_dict.values()]) for data_dict in data ]
-            for value in values:
-                print(value)
+            
+            # DEBUG
+            #for value in values:
+            #    print(value)
+            
             # insert all 
             cursor.executemany(f"insert into {table_name} ({keys}) VALUES ({('%s, '*len(data[0].keys())).strip(', ')});", values)
         
-            # Show student table
+            # Show table table
             if verbose:
                 cursor.execute(f'select * from {table_name};')
         
@@ -92,18 +95,22 @@ def create_write_dict_db(table_name: str, data: list, verbose = False):
         # If error occurs during writing into table, restore with backup if exists
         except BaseException as error:
             print(f'ERROR: {error}')
-            cursor.execute(
-                f"""SELECT tablename FROM pg_tables WHERE tablename='{table_name}'; """)
-            listOfTables = cursor.fetchall()
-            try:
-                cursor.execute(f"DROP TABLE {table_name};")
-            except:
-                pass
             
+            # Get backup table
+            cursor.execute(
+                f"""SELECT tablename FROM pg_tables WHERE tablename='{table_name}_backup'; """)
+            listOfTables = cursor.fetchall()
+            
+            print('listofTables: ' + str(len(listOfTables)))
+            
+            # Drop corrupted table if exists
+            cursor.execute(f"drop table if exists {table_name}")
+            
+            # If backup exists, restore from it and then drop
             if listOfTables != []:
-                cursor.execute(f"CREATE TABLE {table_name} as SELECT * FROM {table_name}_BACKUP")
+                cursor.execute(f"CREATE TABLE {table_name} as SELECT * FROM {table_name}_backup")
                 
-                cursor.execute(f"DROP TABLE {table_name}_BACKUP;")
+                cursor.execute(f"DROP TABLE {table_name}_backup;")
             
             
                 
