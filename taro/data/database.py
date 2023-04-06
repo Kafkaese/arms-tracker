@@ -26,6 +26,7 @@ def create_write_dict_db(table_name: str, data: list, verbose = False):
     connection = None
     try:
     
+        print(os.getenv('POSTGRES_HOST') + +':'+os.getenv('POSTGRES_PORT'))
         # Connect to databse
         connection = psycopg2.connect(dbname=os.getenv("POSTGRES_DB_NAME"),
                                 user=os.getenv("POSTGRES_USER"),
@@ -54,7 +55,7 @@ def create_write_dict_db(table_name: str, data: list, verbose = False):
             cursor.execute(f"drop table if exists {table_name}")
             
         except psycopg2.Error as error:
-            print('Error occurred - ', error)
+            print('Error occurred while trying to create backup - ', error)
         
         try:   
             # create field names for table from dictionary keys
@@ -123,7 +124,7 @@ def create_write_dict_db(table_name: str, data: list, verbose = False):
             
     
     except psycopg2.Error as error:
-        print('Error occurred - ', error)
+        print('Error occurred while trying to connect - ', error)
     
     finally:
         if connection:
