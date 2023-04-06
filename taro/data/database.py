@@ -23,7 +23,7 @@ def create_write_dict_db(table_name: str, data: list, verbose = False):
     Writes the contents of a dictionary into a table in the database
     ! DESTRUCTIVE: overwrites pre-existing table of same name
     """
-    sqliteConnection = None
+    connection = None
     try:
     
         # Connect to databse
