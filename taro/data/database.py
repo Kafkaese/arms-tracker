@@ -26,7 +26,7 @@ def create_write_dict_db(table_name: str, data: list, verbose = False):
     connection = None
     try:
     
-        print(os.getenv('POSTGRES_HOST') + +':'+os.getenv('POSTGRES_PORT'))
+        print(os.getenv('POSTGRES_HOST') + ':' + os.getenv('POSTGRES_PORT'))
         # Connect to databse
         connection = psycopg2.connect(dbname=os.getenv("POSTGRES_DB_NAME"),
                                 user=os.getenv("POSTGRES_USER"),
