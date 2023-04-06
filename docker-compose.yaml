@@ -1,0 +1,9 @@
+services:
+  armstracker-postgres:
+    image: postgres
+    env_file:
+      - '.env'
+    networks:
+      - armstracker
+    ports:
+      - ${POSTGRES_PORT}:5432
