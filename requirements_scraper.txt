@@ -1,4 +1,4 @@
 beautifulsoup4
 pytest
 requests
-psycopg2
+psycopg2-binary
