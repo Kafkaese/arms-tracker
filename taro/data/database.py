@@ -108,8 +108,11 @@ def create_write_dict_db(table_name: str, data: list, verbose = False):
             
             # If backup exists, restore from it and then drop
             if listOfTables != []:
+                
+                print('Restoring table')
                 cursor.execute(f"CREATE TABLE {table_name} as SELECT * FROM {table_name}_backup")
                 
+                print('Dropping Backup Table')
                 cursor.execute(f"DROP TABLE {table_name}_backup;")
             
             
