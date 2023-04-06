@@ -114,6 +114,9 @@ def create_write_dict_db(table_name: str, data: list, verbose = False):
                 
                 print('Dropping Backup Table')
                 cursor.execute(f"DROP TABLE {table_name}_backup;")
+                
+            connection.commit()
+            cursor.close()
             
             
                 
