@@ -8,6 +8,6 @@ services:
     ports:
       - ${POSTGRES_PORT}:5432
 
-  networks:
-    armstracker:
-      driver: bridge
+networks:
+  armstracker:
+    driver: bridge
