@@ -1,14 +1,18 @@
 from taro.data.database import create_write_dict_db
-import sqlite3
+import psycopg2
 import os
 
 def test_clean_db():
-    sqliteConnection = None
+    connection = None
     try:
     
         # Connect to databse
-        sqliteConnection = sqlite3.connect(database=os.getenv("DB_PATH"))
-        cursor = sqliteConnection.cursor()
+        connection = psycopg2.connect(dbname=os.getenv("POSTGRES_DB_NAME"),
+                                user=os.getenv("POSTGRES_USER"),
+                                password=os.getenv("POSTGRES_PASSWORD"),
+                                host=os.getenv("POSTGRES_HOST"),
+                                port=os.getenv("POSTGRES_PORT"))
+        cursor = connection.cursor()
     
         # fetch dummy table
         try:
@@ -21,9 +25,9 @@ def test_clean_db():
             pass
         
     finally:
-        if sqliteConnection:
-            sqliteConnection.close()
-            print('SQLite Connection closed')
+        if connection:
+            connection.close()
+            print('Postgres Connection closed: test_clean_db')
 
 def test_dummy_table():
     
@@ -34,12 +38,16 @@ def test_dummy_table():
     create_write_dict_db('dummy', data, verbose=True)
     
     
-    sqliteConnection = None
+    connection = None
     try:
     
         # Connect to databse
-        sqliteConnection = sqlite3.connect(database=os.getenv("DB_PATH"))
-        cursor = sqliteConnection.cursor()
+        connection = psycopg2.connect(dbname=os.getenv("POSTGRES_DB_NAME"),
+                                user=os.getenv("POSTGRES_USER"),
+                                password=os.getenv("POSTGRES_PASSWORD"),
+                                host=os.getenv("POSTGRES_HOST"),
+                                port=os.getenv("POSTGRES_PORT"))
+        cursor = connection.cursor()
     
         # fetch dummy table
         cursor.execute(f'select * from dummy;')
@@ -48,9 +56,9 @@ def test_dummy_table():
         assert result == [('bla', 2, 3.141), ('blafdf', 42, 3.1431), ('blfsa', 4, 3.431)]
         
     finally:
-        if sqliteConnection:
-            sqliteConnection.close()
-            print('SQLite Connection closed')
+        if connection:
+            connection.close()
+            print('Postgres Connection closed: test_dummy_table')
     
 def test_dummy_backup():
     # create dummy data
@@ -59,12 +67,16 @@ def test_dummy_backup():
     # Write dummy data to db
     create_write_dict_db('dummy', new_data, verbose=True)
     
-    sqliteConnection = None
+    connection = None
     try:
     
         # Connect to databse
-        sqliteConnection = sqlite3.connect(database=os.getenv("DB_PATH"))
-        cursor = sqliteConnection.cursor()
+        connection = psycopg2.connect(dbname=os.getenv("POSTGRES_DB_NAME"),
+                                user=os.getenv("POSTGRES_USER"),
+                                password=os.getenv("POSTGRES_PASSWORD"),
+                                host=os.getenv("POSTGRES_HOST"),
+                                port=os.getenv("POSTGRES_PORT"))
+        cursor = connection.cursor()
     
         # fetch dummy table
         cursor.execute(f'select * from dummy_BACKUP;')
@@ -73,9 +85,9 @@ def test_dummy_backup():
         assert result == [('bla', 2, 3.141), ('blafdf', 42, 3.1431), ('blfsa', 4, 3.431)]
         
     finally:
-        if sqliteConnection:
-            sqliteConnection.close()
-            print('SQLite Connection closed')
+        if connection:
+            connection.close()
+            print('Postgres Connection closed: test_dummy_backup')
             
                 
 def test_dummy_backup_restore():
@@ -89,8 +101,12 @@ def test_dummy_backup_restore():
     try:
 
         # Connect to databse
-        sqliteConnection = sqlite3.connect(database=os.getenv("DB_PATH"))
-        cursor = sqliteConnection.cursor()
+        connection = psycopg2.connect(dbname=os.getenv("POSTGRES_DB_NAME"),
+                                user=os.getenv("POSTGRES_USER"),
+                                password=os.getenv("POSTGRES_PASSWORD"),
+                                host=os.getenv("POSTGRES_HOST"),
+                                port=os.getenv("POSTGRES_PORT"))
+        cursor = connection.cursor()
     
         # fetch dummy table
         cursor.execute(f'select * from dummy;')
@@ -99,8 +115,8 @@ def test_dummy_backup_restore():
         assert result == [('bla', 2, 3.141), ('blafdf', 42, 3.1431), ('blfsa', 4, 3.431)]
         
     finally:
-        if sqliteConnection:
-            sqliteConnection.close()
-            print('SQLite Connection closed')
+        if connection:
+            connection.close()
+            print('Postgres Connection closed: test_dummy_backup_resore')
             
     

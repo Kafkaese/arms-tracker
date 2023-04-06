@@ -1,0 +1,16 @@
+FROM python:3.8.16-slim-buster
+
+# Copy package files
+COPY ../taro taro
+COPY ../setup.py setup.py
+COPY ../requirements_scraper.txt requirements.txt
+
+# Install taro package
+RUN pip install .
+
+# Bind mount for databse?
+
+# Volume for logs?
+
+# For now just run all the tests
+CMD python -c 'from taro.interface import run_scraper; run_scraper()'
