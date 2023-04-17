@@ -2,6 +2,25 @@ from taro.data.database import create_write_dict_db
 import psycopg2
 import os
 
+
+def test_db_connection():
+    connection = None
+    try:
+    
+        # Connect to databse
+        connection = psycopg2.connect(dbname=os.getenv("POSTGRES_DB_NAME"),
+                                user=os.getenv("POSTGRES_USER"),
+                                password=os.getenv("POSTGRES_PASSWORD"),
+                                host=os.getenv("POSTGRES_HOST"),
+                                port=os.getenv("POSTGRES_PORT"))
+        cursor = connection.cursor()
+        
+    finally:
+        if connection:
+            connection.close()
+            print('Postgres Connection closed: test_clean_db')
+            
+            
 def test_clean_db():
     connection = None
     try:
