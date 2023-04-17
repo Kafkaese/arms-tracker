@@ -13,4 +13,7 @@ RUN pip install .
 # Volume for logs?
 
 # For now just run all the tests
+RUN pytest taro/tests -v || exit 1
+
+# Run the scraper via the interface script
 CMD python -c 'from taro.interface import run_scraper; run_scraper()'
