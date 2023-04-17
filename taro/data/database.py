@@ -1,13 +1,17 @@
-import sqlite3
-from sqlite3 import Error
+import psycopg2
 import os
+from psycopg2 import Error
 
 def create_connection():
     """ create a database connection to a SQLite database """
     conn = None
     try:
-        conn = sqlite3.connect(database=os.getenv["DB_PATH"])
-        print(sqlite3.version)
+        conn = psycopg2.connect(dbname=os.getenv("POSTGRES_DB_NAME"),
+                                user=os.getenv("POSTGRES_USER"),
+                                password=os.getenv("POSTGRES_PASSWORD"),
+                                host=os.getenv("POSTGRES_HOST"),
+                                port=os.getenv("POSTGRES_PORT"))
+        print(psycopg2.__version__)
     except Error as e:
         print(e)
     finally:
@@ -19,30 +23,39 @@ def create_write_dict_db(table_name: str, data: list, verbose = False):
     Writes the contents of a dictionary into a table in the database
     ! DESTRUCTIVE: overwrites pre-existing table of same name
     """
-    sqliteConnection = None
+    connection = None
     try:
     
+        print(os.getenv('POSTGRES_HOST') + ':' + os.getenv('POSTGRES_PORT'))
         # Connect to databse
-        sqliteConnection = sqlite3.connect(database=os.getenv("DB_PATH"))
-        cursor = sqliteConnection.cursor()
+        connection = psycopg2.connect(dbname=os.getenv("POSTGRES_DB_NAME"),
+                                user=os.getenv("POSTGRES_USER"),
+                                password=os.getenv("POSTGRES_PASSWORD"),
+                                host=os.getenv("POSTGRES_HOST"),
+                                port=os.getenv("POSTGRES_PORT"))
+        cursor = connection.cursor()
 
 
         ## If table already exists, back it up
         
         # Check if table exists
         try:
-            listOfTables = cursor.execute(
-                f"""SELECT tbl_Name FROM sqlite_master WHERE type='table'
-                AND tbl_Name='{table_name}'; """).fetchall()
+            
+            cursor.execute(
+                f"""SELECT tablename FROM pg_tables WHERE tablename='{table_name}'; """)
+            listOfTables = cursor.fetchall()
+
             
             # if exists, create backup copy        
             if listOfTables != []:
-                cursor.execute(f"CREATE TABLE {table_name}_BACKUP as SELECT * FROM {table_name}")
+                cursor.execute(f"drop table if exists {table_name}_backup")
+                cursor.execute(f"CREATE TABLE {table_name}_backup as SELECT * FROM {table_name}")
             
             # Drop old table of same name
             cursor.execute(f"drop table if exists {table_name}")
-        except:
-            pass
+            
+        except psycopg2.Error as error:
+            print('Error occurred while trying to create backup - ', error)
         
         try:   
             # create field names for table from dictionary keys
@@ -61,10 +74,14 @@ def create_write_dict_db(table_name: str, data: list, verbose = False):
             # prepare values as list of tuples
             values = [ tuple([str(value) for value in data_dict.values()]) for data_dict in data ]
             
+            # DEBUG
+            #for value in values:
+            #    print(value)
+            
             # insert all 
-            cursor.executemany(f"insert into {table_name} ({keys}) VALUES ({('?, '*len(values)).strip(', ')});", values)
+            cursor.executemany(f"insert into {table_name} ({keys}) VALUES ({('%s, '*len(data[0].keys())).strip(', ')});", values)
         
-            # Show student table
+            # Show table table
             if verbose:
                 cursor.execute(f'select * from {table_name};')
         
@@ -73,37 +90,46 @@ def create_write_dict_db(table_name: str, data: list, verbose = False):
                 print(result)
         
             # Commit work and close connection
-            sqliteConnection.commit()
+            connection.commit()
             cursor.close()
         
         # If error occurs during writing into table, restore with backup if exists
-        except sqlite3.Error as error:
+        except BaseException as error:
             print(f'ERROR: {error}')
-            listOfTables = cursor.execute(
-                f"""SELECT tbl_Name FROM sqlite_master WHERE type='table'
-                AND tbl_Name='{table_name}_BACKUP'; """).fetchall()
             
-            try:
-                cursor.execute(f"DROP TABLE {table_name};")
-            except:
-                pass
+            # Get backup table
+            cursor.execute(
+                f"""SELECT tablename FROM pg_tables WHERE tablename='{table_name}_backup'; """)
+            listOfTables = cursor.fetchall()
             
+            print('listofTables: ' + str(len(listOfTables)))
+            
+            # Drop corrupted table if exists
+            cursor.execute(f"drop table if exists {table_name}")
+            
+            # If backup exists, restore from it and then drop
             if listOfTables != []:
-                cursor.execute(f"CREATE TABLE {table_name} as SELECT * FROM {table_name}_BACKUP")
                 
-                cursor.execute(f"DROP TABLE {table_name}_BACKUP;")
+                print('Restoring table')
+                cursor.execute(f"CREATE TABLE {table_name} as SELECT * FROM {table_name}_backup")
+                
+                print('Dropping Backup Table')
+                cursor.execute(f"DROP TABLE {table_name}_backup;")
+                
+            connection.commit()
+            cursor.close()
             
             
                 
             
     
-    except sqlite3.Error as error:
-        print('Error occurred - ', error)
+    except psycopg2.Error as error:
+        print('Error occurred while trying to connect - ', error)
     
     finally:
-        if sqliteConnection:
-            sqliteConnection.close()
-            print('SQLite Connection closed')
+        if connection:
+            connection.close()
+            print('Postgres Connection closed')
 
 def insert_country(db_path, country):
     """
@@ -135,5 +161,5 @@ def insert_country(db_path, country):
     return cur.lastrowid
 
 if __name__ == '__main__':
-    data = [{'Field1': 'bla', 'Field2': 2, 'Field3': 3.141}, {'Field1': 'blafdf', 'Field2': 42, 'Field3': 3.1431}, {'Field1': 'blfsa', 'Field2': 4, 'Field3': 3.431}]
+    data = [{'Field1': 'bla', 'Field2': 2, 'Field3': 3.141}, {'Field1': 'bla', 'Field2': 2, 'Field3': 3.141}, {'Field1': 'blafdf', 'Field2': 42, 'Field3': 3.1431}, {'Field1': 'blfsa', 'Field2': 4, 'Field3': 3.431}]
     create_write_dict_db('test', data, verbose=True)
