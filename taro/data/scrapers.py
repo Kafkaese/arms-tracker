@@ -84,7 +84,7 @@ def get_conflict_belligerents(url: str, write_logs=False) -> list:
             try:
                 # Get name and url of country
                 country_info = country.find('a')
-                belligerents.append({'name': country_info.text, 'url': 'https://en.wikipedia.org/' + country_info['href']})
+                belligerents.append({'name': country_info.text, 'url': 'https://en.wikipedia.org/' + country_info['href'], 'conflict_url': url})
                 
                 if write_logs:
                     with open(logs_path, 'a') as logs:
